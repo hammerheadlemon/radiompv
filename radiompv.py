@@ -4,8 +4,6 @@ import requests
 import subprocess
 import argparse
 
-from halo import Halo
-
 from bs4 import BeautifulSoup
 
 urls = {
