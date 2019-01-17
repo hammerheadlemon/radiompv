@@ -19,10 +19,12 @@ def main(station):
     r = requests.get(station[1])
     soup = BeautifulSoup(r.text, "html.parser")
     title = soup.title.text
-    on_now_cls = soup.find_all("div", class_="on-air__track-now-playing__details")[0].text
+    on_now_cls = soup.find_all("h3", class_="on-air__episode-title")[0].text
+    synopsis = soup.find_all("p", class_="on-air__episode-synopsis")[0].text
+#   on_now_cls = soup.find_all("div", class_="on-air__track-now-playing__details")[0].text
     msg = "\033[1;96mCurrent programme: \33[0m"
-    print("\033[1;95m" + title + "\33[0m")
-    print(" ".join([msg, "\033[1;33m", on_now_cls, "\033[0m"]))
+    print("\n\033[1;95m" + title + "\33[0m")
+    print(" ".join([msg, "\033[1;33m", on_now_cls, ": ", synopsis, "\033[0m"]))
     print("\nCtrl-C to quit\n")
     subprocess.run(["mpv", station[2]])
 
