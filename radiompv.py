@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import requests
 import subprocess
 import argparse
@@ -28,7 +30,7 @@ def main(station):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Stream BBC radio")
+    parser = argparse.ArgumentParser(description="Stream BBC radio - requires mpv")
     parser.add_argument("station", type=str, nargs=1, help="Name of station: radio2, radio3, radio4, radio5, radio6")
     args = vars(parser.parse_args())
     try:
