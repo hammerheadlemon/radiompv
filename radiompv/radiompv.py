@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+import sys
 
 import requests
 import subprocess
@@ -15,8 +15,22 @@ urls = {
 }
 
 
-def main(station):
-    r = requests.get(station[1])
+def main():
+    parser = argparse.ArgumentParser(description="Stream BBC radio - requires mpv")
+    parser.add_argument("station", type=str, nargs=1, help="Name of station: radio2, radio3, radio4, radio5, radio6")
+    args = vars(parser.parse_args())
+
+    try:
+        station = urls.get(args['station'][0])
+        if station:
+            r = requests.get(station[1])
+        else:
+            print("Don't recognise that radio station")
+            sys.exit(1)
+
+    except TypeError:
+        print("Don't recognise that radio station")
+        sys.exit(1)
     soup = BeautifulSoup(r.text, "html.parser")
     title = soup.title.text
     on_now_cls = soup.find_all("h3", class_="on-air__episode-title")[0].text
@@ -25,16 +39,5 @@ def main(station):
     msg = "\033[1;96mCurrent programme: \33[0m"
     print("\n\033[1;95m" + title + "\33[0m")
     print(" ".join([msg, "\033[1;33m", on_now_cls, ": ", synopsis, "\033[0m"]))
-    print("\nCtrl-C to quit\n")
+    print("\nCtrl-C or Q to quit\n")
     subprocess.run(["mpv", station[2]])
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Stream BBC radio - requires mpv")
-    parser.add_argument("station", type=str, nargs=1, help="Name of station: radio2, radio3, radio4, radio5, radio6")
-    args = vars(parser.parse_args())
-    try:
-        main(urls.get(args['station'][0]))
-    except TypeError:
-        print("Don't recognise that radio station")
-
